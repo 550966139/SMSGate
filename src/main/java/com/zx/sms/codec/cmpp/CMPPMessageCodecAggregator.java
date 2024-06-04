@@ -1,5 +1,6 @@
 package com.zx.sms.codec.cmpp;
 
+import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
@@ -45,16 +46,20 @@ public final class CMPPMessageCodecAggregator extends ChannelDuplexHandler {
 
 	@Override
 	public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception {
-		try {
-			if(msg instanceof Message) {
-				int commandId = ((Message) msg).getHeader().getCommandId();
-				MessageToMessageCodec codec = codecMap.get(commandId);
-				codec.write(ctx, msg, promise);
-			}else {
-				ctx.writeAndFlush(msg, promise);
+		if(msg instanceof Message) {
+			try {
+				if(msg instanceof Message) {
+					int commandId = ((Message) msg).getHeader().getCommandId();
+					MessageToMessageCodec codec = codecMap.get(commandId);
+					codec.write(ctx, msg, promise);
+				}else {
+					ctx.writeAndFlush(msg, promise);
+				}
+			} catch (Exception ex) {
+				promise.tryFailure(ex);
 			}
-		} catch (Exception ex) {
-			promise.tryFailure(ex);
+		}else if(msg instanceof ByteBuf) {
+			ctx.write(msg,promise);
 		}
 	}
 }

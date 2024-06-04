@@ -21,6 +21,7 @@ import com.zx.sms.connect.manager.ClientEndpoint;
 import com.zx.sms.connect.manager.EndpointConnector;
 import com.zx.sms.connect.manager.EndpointEntity;
 import com.zx.sms.connect.manager.EndpointManager;
+import com.zx.sms.connect.manager.ServerEndpoint;
 import com.zx.sms.session.cmpp.SessionState;
 
 import io.netty.buffer.ByteBuf;
@@ -54,7 +55,7 @@ public abstract class AbstractSessionLoginManager extends ChannelDuplexHandler {
 	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
 		if (state == SessionState.DisConnect) {
 			String exceptionMsg = cause.getMessage();
-			if(cause instanceof TooLongFrameException && exceptionMsg != null) {
+			if(entity instanceof ServerEndpoint &&  cause instanceof TooLongFrameException && exceptionMsg != null) { //服务端收到非法的请求体，猜下是不是HTTP协议
 				Matcher  matcher = p.matcher(exceptionMsg);
 				if(matcher.find()) {
 					String length = matcher.group(1);
