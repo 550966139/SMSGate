@@ -363,10 +363,11 @@ public enum LongMessageFrameHolder {
 				// 根据默认的Dcs设置将要发送消息的msgdcs值，可能不同的通道长短信分片的最大长度不同
 				if (e != null && msgcontent instanceof SmsTextMessage) {
 					SmsTextMessage smsTextMessage = (SmsTextMessage) msgcontent;
+				
 					AbstractSmsDcs msgDcs = smsTextMessage.getDcs();
 					AbstractSmsDcs defaultDcs = e.buildDefaultSmsDcs(msgDcs.getValue());
 					// 类型不同的，以通道默认的Dcs为准
-					if (!msgDcs.getClass().equals(defaultDcs)) {
+					if (!msgDcs.getClass().equals( defaultDcs.getClass())) {
 						defaultDcs.setUse8bit(msgDcs.isUse8bit());
 						smsTextMessage.setText(smsTextMessage.getText(), defaultDcs);
 					}
