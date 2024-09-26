@@ -31,6 +31,14 @@
   
   List< Future > f = ChannelUtil.syncWriteLongMsgToEntity([clientEntityId],message)方法发送，`要判断f是否为Null，为Null表示发送失败,一条短信可能拆分成多条，因此返回List`。
 
+- `关闭默认超速错误自动重发功能`
+
+  如CMPP协议接收到错误码为8的响应（超速错误），系统默认会再次重发直到成功，最大重试次数默认是30次。如果要关闭默认重试功能，须设置 `entity.overSpeedSendCountLimit `为 `0`
+  
+  SGIP、SMPP的超速错误码是88，于CMPP协议相同，也会超速重发。 
+  
+  SMGP 协议因为未定义超速错误码，不会超速重试。
+
 - `如何发送长短信？`
 
   smsgate默认已经处理好长短信了，就像发送普通短信一样。长短信发送的时候，框架内部自动拆分成短短信分片发送(一般按67个汉字拆分)。
@@ -223,6 +231,11 @@ allEntityPointList.foreach(e->{
 
 ```
 
+- `框架内部的netty的Handler前后顺序`
+如图：
+<DIV>
+<img src="./doc/handler.jpg" width="100%" height="100%">
+<DIV>
 
 # CMPPGate , SMPPGate , SGIPGate, SMGPGate
 中移短信cmpp协议/smpp协议 netty实现编解码
