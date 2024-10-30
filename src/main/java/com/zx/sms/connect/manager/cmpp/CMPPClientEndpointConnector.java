@@ -27,8 +27,6 @@ import io.netty.handler.timeout.IdleStateHandler;
 public class CMPPClientEndpointConnector extends AbstractClientEndpointConnector {
 	private static final Logger logger = LoggerFactory.getLogger(CMPPClientEndpointConnector.class);
 	
-
-	
 	public CMPPClientEndpointConnector(CMPPClientEndpointEntity e)
 	{
 		super(e);
@@ -58,9 +56,10 @@ public class CMPPClientEndpointConnector extends AbstractClientEndpointConnector
 		CMPPCodecChannelInitializer codec = null;
 		EndpointEntity entity = getEndpointEntity();
 		if (entity instanceof CMPPEndpointEntity) {
-			pipeline.addLast(GlobalConstance.IdleCheckerHandlerName,
-					new IdleStateHandler(0, 0, ((CMPPEndpointEntity) getEndpointEntity()).getIdleTimeSec(), TimeUnit.SECONDS));
-			
+			if(!entity.isCloseIdleTest()) {
+				pipeline.addLast(GlobalConstance.IdleCheckerHandlerName,
+						new IdleStateHandler(0, 0, ((CMPPEndpointEntity) getEndpointEntity()).getIdleTimeSec(), TimeUnit.SECONDS));
+			}
 			codec = new CMPPCodecChannelInitializer(((CMPPEndpointEntity) getEndpointEntity()).getVersion());
 
 		} else {

@@ -160,8 +160,9 @@ public abstract class AbstractEndpointConnector implements EndpointConnector<End
 		if (getChannels().remove(ch)) {
 			ch.attr(GlobalConstance.attributeKey).set(SessionState.DisConnect);
 			ch.attr(GlobalConstance.sessionKey).set(null);
-			ch.attr(GlobalConstance.entityPointKey).set(null);
-			ch.attr(GlobalConstance.channelActiveTime).set(null);
+			//以下属性后边handler可能还要使用，不清除
+//			ch.attr(GlobalConstance.entityPointKey).set(null);
+//			ch.attr(GlobalConstance.channelActiveTime).set(null);
 		}
 		synchronized(this) {
 			if( endpoint.isReSendFailMsg() && getChannels().size() == 0 ) {

@@ -234,8 +234,11 @@ public abstract class AbstractSessionLoginManager extends ChannelDuplexHandler {
 			// 检查是否超过最大连接数
 			if (conn.addChannel(ctx.channel())) {
 				IdleStateHandler idlehandler = (IdleStateHandler) ctx.pipeline().get(GlobalConstance.IdleCheckerHandlerName);
-				ctx.pipeline().replace(idlehandler, GlobalConstance.IdleCheckerHandlerName,
-						new IdleStateHandler(0, 0, oldEntity.getIdleTimeSec(), TimeUnit.SECONDS));
+				if(idlehandler!=null) {
+					ctx.pipeline().replace(idlehandler, GlobalConstance.IdleCheckerHandlerName,
+							new IdleStateHandler(0, 0, oldEntity.getIdleTimeSec(), TimeUnit.SECONDS));
+				}
+
 				state = SessionState.Connect;
 
 				// channelHandler已绑定完成，给客户端发resp.

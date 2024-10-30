@@ -151,6 +151,14 @@ public abstract class EndpointEntity implements Serializable {
 	 */
 	private SignatureType signatureType;
 	
+	private boolean closeIdleTest = false;
+	
+	public boolean isCloseIdleTest() {
+		return closeIdleTest;
+	}
+	public void setCloseIdleTest(boolean closeIdleTest) {
+		this.closeIdleTest = closeIdleTest;
+	}
 	/**
 	  * 默认的创建Tcp连接三次握手超时时间,默认3秒
 	 */

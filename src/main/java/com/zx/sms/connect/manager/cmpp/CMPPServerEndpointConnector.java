@@ -25,8 +25,11 @@ public class CMPPServerEndpointConnector extends AbstractServerEndpointConnector
 	protected void doinitPipeLine(ChannelPipeline pipeline) {
 		CMPPCodecChannelInitializer codec = null;
 		if (getEndpointEntity() instanceof CMPPEndpointEntity) {
-			pipeline.addLast(GlobalConstance.IdleCheckerHandlerName,
-					new IdleStateHandler(0, 0, getEndpointEntity().getIdleTimeSec(), TimeUnit.SECONDS));
+			if(!getEndpointEntity().isCloseIdleTest()) {
+				pipeline.addLast(GlobalConstance.IdleCheckerHandlerName,
+						new IdleStateHandler(0, 0, getEndpointEntity().getIdleTimeSec(), TimeUnit.SECONDS));
+			}
+			
 			codec = new CMPPCodecChannelInitializer(((CMPPEndpointEntity) getEndpointEntity()).getVersion());
 
 		} else {
